@@ -1,7 +1,26 @@
+use clap::Parser;
 use windows::{core::*, Win32::UI::WindowsAndMessaging::*};
 
+#[derive(Parser)]
+#[clap(about = "Get or set mouse speed")]
+struct Args {
+    /// New mouse speed
+    speed: Option<i32>,
+}
+
 fn main() -> Result<()> {
-    println!("{}", get_mouse_speed()?);
+    let args = Args::parse();
+
+    let old_speed = get_mouse_speed()?;
+
+    if let Some(new_speed) = args.speed {
+        set_mouse_speed(new_speed)?;
+        println!("Old mouse speed: {}", old_speed);
+        println!("New mouse speed: {}", new_speed);
+    } else {
+        println!("Current mouse speed: {}", old_speed);
+    }
+
     Ok(())
 }
 
